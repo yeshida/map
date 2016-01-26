@@ -13,6 +13,6 @@ public class main extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        render_tracks();
+        //render_tracks();
     }
 }

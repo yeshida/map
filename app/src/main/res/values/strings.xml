@@ -19,4 +19,6 @@
     <string name="setting_gps">设置gps</string>
     <string name="setting_map_level">设置地图等级</string>
     <string name="setting_submit">提交设置</string>
+    <string name="spinner_gps_prompt">选择gps</string>
+    <string name="spinner_map_prompt">选择地图</string>
 </resources>

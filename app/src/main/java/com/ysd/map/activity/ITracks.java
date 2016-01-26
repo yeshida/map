@@ -41,7 +41,7 @@ public class ITracks extends Activity {
                 return true;
             case MENU_CON:
                 //TODO:继续跟踪选择的记录
-                conTrackService();
+              //  conTrackService();
                 return true;
             case MENU_SETTING:
                 intent.setClass(ITracks.this, Setting.class);

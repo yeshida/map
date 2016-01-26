@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -40,7 +41,7 @@ public class Setting extends Activity {
         setTitle(R.string.menu_setting);
         findViews();
         setListeners();
-        retorePrefs();
+        restorePrefs();
     }
         private void findViews() {
             Log.i(TAG, "find views");
@@ -86,5 +87,67 @@ public class Setting extends Activity {
     //restore preferences
     private void restorePrefs() {
         SharedPreferences settings = getSharedPreferences(SETTING_INFOS, 0);
+        int setting_gps_p = settings.getInt(SETTING_GPS_POSITON, 0);
+        int setting_map_level_p = settings.getInt(SETTING_MAP_POSITON, 0);
+        Log.d(TAG, "restoreprefs: setting_gps=" + setting_gps_p + ",setting_map_level=" + setting_map_level_p);
+        if (setting_gps_p != 0 && setting_map_level_p != 0) {
+            field_setting_gps.setSelection(setting_gps_p);
+            field_setting_map_level.setSelection(setting_map_level_p);
+            button_setting_submit.requestFocus();
+        }else if (setting_gps_p != 0) {
+            field_setting_gps.setSelection(setting_gps_p);
+            field_setting_map_level.requestFocus();
+        }else if (setting_map_level_p != 0) {
+            field_setting_map_level.setSelection(setting_map_level_p);
+            field_setting_gps.requestFocus();
+        } else {
+            field_setting_gps.requestFocus();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "save setting infos");
+        storePrefs();
+    }
+    //保存个人设置
+    private void storePrefs() {
+        Log.d(TAG, "storePrefs setting infos");
+        SharedPreferences settings = getSharedPreferences(SETTING_INFOS, 0);
+        settings.edit().putString(SETTING_GPS, field_setting_gps.getSelectedItem().toString())
+                .putString(SETTING_MAP, field_setting_map_level.getSelectedItem().toString())
+                .putInt(SETTING_GPS_POSITON, field_setting_gps.getSelectedItemPosition())
+                .putInt(SETTING_MAP_POSITON, field_setting_map_level.getSelectedItemPosition()).commit();
+    }
+    //初始化菜单
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+        menu.add(0, MENU_MAIN, 0, R.string.menu_main).setAlphabeticShortcut('M');
+        menu.add(0, MENU_NEW, 0, R.string.menu_new).setAlphabeticShortcut('N');
+        menu.add(0, MENU_BACK, 0, R.string.menu_back).setAlphabeticShortcut('E');
+        return true;
+    }
+    //当一个菜单被选中的时候调用
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent();
+        switch (item.getItemId()) {
+            case MENU_NEW:
+                intent.setClass(Setting.this, NewTrack.class);
+                startActivity(intent);
+                return true;
+            case MENU_MAIN:
+                intent.setClass(Setting.this, ITracks.class);
+                startActivity(intent);
+                return true;
+            case MENU_BACK:
+                finish();
+                break;
+        }
+        return true;
     }
 }
