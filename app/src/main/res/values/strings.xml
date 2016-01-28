@@ -26,4 +26,7 @@
     <string name="setting_null">设置值为空</string>
     <string name="setting_ok">设置成功</string>
     <string name="setting_fail">设置失败</string>
+    <string name="satellite">卫星</string>
+    <string name="traffic">交通</string>
+    <string name="streetview">街景</string>
 </resources>
