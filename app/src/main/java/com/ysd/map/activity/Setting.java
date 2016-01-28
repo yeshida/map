@@ -68,7 +68,7 @@ public class Setting extends Activity {
                 String gps = (field_setting_gps.getSelectedItem().toString());
                 String map = (field_setting_map_level.getSelectedItem().toString());
                 if (gps.equals("") || map.equals("")) {
-                    Toast.makeText(Setting.this, getString(R.string_setting_null), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Setting.this, getString(R.string.setting_null), Toast.LENGTH_SHORT).show();
                 } else {
                     //保存设定
                     storePrefs();
@@ -124,8 +124,8 @@ public class Setting extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
-        menu.add(0, MENU_MAIN, 0, R.string.menu_main).setAlphabeticShortcut('M');
+         super.onCreateOptionsMenu(menu);
+        menu.add(0, MENU_MAIN, 0, "主页").setAlphabeticShortcut('M');
         menu.add(0, MENU_NEW, 0, R.string.menu_new).setAlphabeticShortcut('N');
         menu.add(0, MENU_BACK, 0, R.string.menu_back).setAlphabeticShortcut('E');
         return true;

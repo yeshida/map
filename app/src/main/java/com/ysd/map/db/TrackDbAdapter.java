@@ -10,30 +10,30 @@ import java.sql.SQLException;
 import java.util.Calendar;
 
 /**
- * Created by Administrator on 2016/1/26.
+ * Created by Administrator on 2016/1/28.
  */
-public class TrackDbAdaper extends DbAdapter {
-    private static final String TAG="TrackDbAdaper";
-    public static final String TABLE_NAME = "tracks";
-    private static final String ID = "_id";
-    private static final String KEY_ROWID = "_id";
-    private static final String NAME = "name";
-    private static final String DESC = "desc";
-    private static final String DIST = "distance";
-    private static final String TRACKEDTIME = "tracked_time";
-    private static final String LOCATE_COUNT = "locats_count";
-    private static final String CREATED = "created_at";
-    private static final String UPDATED = "update_at";
-    private static final String AVGSPEED = "avg_speed";
-    private static final String MAXSPEED = "max_speed";
+public class TrackDbAdapter extends DbAdapter{
+    private static final String TAG="TrackDbAdapter";
+    public static final String TABLE_NAME = "tracks";//表名
+    public static final String ID = "_id";//主键
+    public static final String KEY_ROWID = "_id";
+    public static final String NAME = "name";//名
+    public static final String DESC = "desc";//说明
+    public static final String DIST = "distance";//距离
+    public static final String TRACKEDTIME = "tracked_time";//时间
+    public static final String LOCATE_COUNT = "locates_count";//点数
+    public static final String CREATED = "created_at";//创建时间
+    public static final String UPDATED = "update_at";//更新时间
+    public static final String AVGSPEED = "avg_speed";//平均速度
+    public static final String MAXSPEED = "max_speed";//最大速度
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
     private final Context mCtx;
 
-    public TrackDbAdaper(Context mCtx) {
+    public TrackDbAdapter(Context mCtx) {
         this.mCtx = mCtx;
     }
-    public TrackDbAdaper open() throws SQLException {
+    public TrackDbAdapter open() throws SQLException {
         mDbHelper = new DatabaseHelper(mCtx);
         mDb = mDbHelper.getWritableDatabase();
         return this;
@@ -76,4 +76,3 @@ public class TrackDbAdaper extends DbAdapter {
         return mDb.update(TABLE_NAME, args, KEY_ROWID + "=" + rowId, null) > 0;
     }
 }
-

@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ysd.map.R;
+import com.ysd.map.db.TrackDbAdapter;
+
+import java.sql.SQLException;
 
 /**
  * Created by Administrator on 2016/1/24.
@@ -28,8 +31,12 @@ public class NewTrack extends Activity {
         setTitle(R.string.menu_new);
         findView();
         setListensers();
-        mDbHelper= new TrackDbAdaper(this);
-        mDbHelper.open();
+        mDbHelper= new TrackDbAdapter(this);
+        try {
+            mDbHelper.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -68,8 +75,8 @@ public class NewTrack extends Activity {
                     Intent intent = new Intent();
                     intent.setClass(NewTrack.this, ShowTrack.class);
                     intent.putExtra(TrackDbAdapter.KEY_ROWID, row_id);
-                    intent.putExtra(RrackDbAdapter.NAME, name);
-                    intent.putExtra(RrackDbAdapter.DESC, desc);
+                    intent.putExtra(TrackDbAdapter.NAME, name);
+                    intent.putExtra(TrackDbAdapter.DESC, desc);
                     startActivity(intent);
 
                 }
