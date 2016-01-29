@@ -25,11 +25,11 @@ public class Setting extends Activity {
     private static final int MENU_NEW= MENU_MAIN+1;
     private static final int MENU_BACK= MENU_NEW+1;
     //保存个性化设置
-    private static final String SETTING_INFOS = "SETTING_Infos";
-    private static final String SETTING_GPS = "SETTING_Gps";
-    private static final String SETTING_MAP = "SETTING_Map";
-    private static final String SETTING_GPS_POSITON = "SETTING_Gps_p";
-    private static final String SETTING_MAP_POSITON = "SETTING_Map_p";
+    public static final String SETTING_INFOS = "SETTING_Infos";
+    public static final String SETTING_GPS = "SETTING_Gps";
+    public static final String SETTING_MAP = "SETTING_Map";
+    public static final String SETTING_GPS_POSITON = "SETTING_Gps_p";
+    public static final String SETTING_MAP_POSITON = "SETTING_Map_p";
 
     private Button button_setting_submit;
     private Spinner field_setting_gps;
