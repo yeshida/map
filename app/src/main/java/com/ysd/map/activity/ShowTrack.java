@@ -1,8 +1,10 @@
 package com.ysd.map.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Canvas;
@@ -14,12 +16,14 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.Image;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -36,13 +40,13 @@ import java.sql.SQLException;
 /**
  * Created by Administrator on 2016/1/25.
  */
-public class ShowTrack extends MapActivity{
-    private static final String TAG="ShowTrack";
+public class ShowTrack extends MapActivity {
+    private static final String TAG = "ShowTrack";
     //定义菜单需要的常量
-    private static final int MENU_NEW= Menu.FIRST+1;
-    private static final int MENU_CON= MENU_NEW+1;
-    private static final int MENU_DEL= MENU_CON+1;
-    private static final int MENU_MAIN= MENU_DEL+1;
+    private static final int MENU_NEW = Menu.FIRST + 1;
+    private static final int MENU_CON = MENU_NEW + 1;
+    private static final int MENU_DEL = MENU_CON + 1;
+    private static final int MENU_MAIN = MENU_DEL + 1;
     private TrackDbAdapter mDbHelper;
     private LocalDbAdapter mlcDbHelper;
     private static MapView mMapView;
@@ -58,7 +62,7 @@ public class ShowTrack extends MapActivity{
     private Button mSat;
     private Button mTraffic;
     private Button mStreetView;
-    private String  mDefCaption="";
+    private String mDefCaption = "";
     private GeoPoint mDefPoint;
 
     private LocationManager lm;
@@ -83,18 +87,20 @@ public class ShowTrack extends MapActivity{
         i.putExtra(LocalDbAdapter.TRACKID, track_id);
         startActivity(i);
     }
+
     private void stopTrackService() {
         stopService(new Intent("om.iceskysl.iTracks.START_TRACK_SERVICE"));
     }
+
     private void paintLocates() {
-        mlcDbHelper = new  LocalDbAdapter(this);
+        mlcDbHelper = new LocalDbAdapter(this);
         try {
             mlcDbHelper.open();
             Cursor mLocatesCursor = mlcDbHelper.getTrackAllLocates(track_id);
             startManagingCursor(mLocatesCursor);
             Resources resources = getResources();
-            Overlay overlays = new MyLocationOverlay(resources.getDrawable(R.drawable.icon),mLocatesCursor);
-            mMapView.getOverlays().add(overlays);
+           // Overlay overlays = new MyLocationOverlay(ShowTrack,mLocatesCursor);代码少了一段
+           // mMapView.getOverlays().add(overlays);
             mlcDbHelper.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -125,9 +131,9 @@ public class ShowTrack extends MapActivity{
         Log.d(TAG, "find views");
         mMapView = (MapView) findViewById(R.id.mv);
         mc = mMapView.getController();
-        SharedPreferences settings = getSharedPreferences(Setting.SETTING_INFOS,0);
+        SharedPreferences settings = getSharedPreferences(Setting.SETTING_INFOS, 0);
         String setting_gps = settings.getString(Setting.SETTING_MAP, "10");
-        mc.getZoom(Integer.parseInt(setting_gps));
+        mc.setZoom(Integer.parseInt(setting_gps));
 
         //set up the button for "Zoom In"
         mZin = (Button) findViewById(R.id.zin);
@@ -210,9 +216,20 @@ public class ShowTrack extends MapActivity{
             }
         });
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationListener= new MyLocationListener();
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationListener);
+        locationListener = new MyLocationListener();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
+
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.d(TAG, "onkeydown");
         if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
@@ -237,17 +254,17 @@ public class ShowTrack extends MapActivity{
     }
 
     private void panWest() {
-        GeoPoint pt = new GeoPoint(mMapView.getMapCenter().getLatitudeE6(),mMapView.getMapCenter().getLongitudeE6()- mMapView.getLatitudeSpan() / 4);
+        GeoPoint pt = new GeoPoint(mMapView.getMapCenter().getLatitudeE6(), mMapView.getMapCenter().getLongitudeE6() - mMapView.getLatitudeSpan() / 4);
         mc.setCenter(pt);
     }
 
     private void panEast() {
-        GeoPoint pt = new GeoPoint(mMapView.getMapCenter().getLatitudeE6(),mMapView.getMapCenter().getLongitudeE6()+ mMapView.getLatitudeSpan() / 4);
+        GeoPoint pt = new GeoPoint(mMapView.getMapCenter().getLatitudeE6(), mMapView.getMapCenter().getLongitudeE6() + mMapView.getLatitudeSpan() / 4);
         mc.setCenter(pt);
     }
 
     private void panNorth() {
-        GeoPoint pt = new GeoPoint(mMapView.getMapCenter().getLatitudeE6()+ mMapView.getLatitudeSpan() / 4,mMapView.getMapCenter().getLongitudeE6());
+        GeoPoint pt = new GeoPoint(mMapView.getMapCenter().getLatitudeE6() + mMapView.getLatitudeSpan() / 4, mMapView.getMapCenter().getLongitudeE6());
         mc.setCenter(pt);
     }
 
@@ -258,6 +275,7 @@ public class ShowTrack extends MapActivity{
     private void ZoomIn() {
         mc.zoomOut();
     }
+
     private void toggleStreetView() {
         mMapView.setSatellite(false);
         mMapView.setStreetView(true);
@@ -281,6 +299,16 @@ public class ShowTrack extends MapActivity{
         String provider = "gps";
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         Location loc = lm.getLastKnownLocation(provider);
         mDefPoint = new GeoPoint((int) (loc.getLatitude() * 1000000), (int) (loc.getLongitude() * 1000000));
         mDefCaption ="Im Here.";
@@ -288,7 +316,7 @@ public class ShowTrack extends MapActivity{
         mc.setCenter(mDefPoint);
         //show Overlay on map
         MyOverlay mo =new MyOverlay();
-        mo.onTab(mDefPoint, mMapView);
+        mo.onTap(mDefPoint, mMapView);
         mMapView.getOverlays().add(mo);
     }
 //this is used draw an overlay on the map
@@ -346,18 +374,27 @@ public class ShowTrack extends MapActivity{
         public void onLocationChanged(Location loc) {
             Log.d(TAG, "mylocatioListener::onLocationChanged..");
             if (loc != null) {
-
+                Toast.makeText(getBaseContext(),"Location changed:Lat"+loc.getLatitude()+"Lng:"+loc.getLongitude(),Toast.LENGTH_SHORT).show();
+                //set up the overlay controller
+                mDefPoint = new GeoPoint((int)(loc.getLatitude() * 1000000),(int)(loc.getLongitude()*1000000));
+                mc.animateTo(mDefPoint);
+                mc.setCenter(mDefPoint);
+                //show on the map.
+                mDefCaption = "Lat:" + loc.getLatitude() + ",Lng:" + loc.getLongitude();
+                MyOverlay mo = new MyOverlay();
+                mo.onTap(mDefPoint, mMapView);
+                mMapView.getOverlays().add(mo);
             }
         }
 
         @Override
         public void onProviderDisabled(String provider) {
-
+            Toast.makeText(getBaseContext(), "ProviderDisable", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onProviderEnabled(String provider) {
-
+            Toast.makeText(getBaseContext(), "onProviderEnabled,provider:"+provider, Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -369,22 +406,60 @@ public class ShowTrack extends MapActivity{
     //初始化菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+         super.onCreateOptionsMenu(menu);
+        menu.add(0, MENU_CON, 0, "继续").setAlphabeticShortcut('C');
+        menu.add(0, MENU_DEL, 0, "").setAlphabeticShortcut('D');
+        menu.add(0, MENU_NEW, 0, "新建").setAlphabeticShortcut('N');
+        menu.add(0, MENU_MAIN, 0, "主页").setAlphabeticShortcut('M');
+        return true;
     }
     //当一个菜单被选中的时候调用
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        Intent intent = new Intent();
+        switch (item.getItemId()) {
+            case MENU_NEW:
+                intent.setClass(ShowTrack.this, NewTrack.class);
+                startActivity(intent);
+                return true;
+            case MENU_CON:
+                //TODO:继续跟踪选择的记录
+                startTrackService();
+                return true;
+            case MENU_DEL:
+                mDbHelper = new TrackDbAdapter(this);
+                try {
+                    mDbHelper.open();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                if (mDbHelper.deleteTrack(rowId)) {
+                    mDbHelper.close();
+                    intent.setClass(ShowTrack.this, ITracks.class);
+                    startActivity(intent);
+                } else {
+                    mDbHelper.close();
+                }
+                return true;
+            case MENU_MAIN:
+                intent.setClass(ShowTrack.this, ITracks.class);
+                startActivity(intent);
+                break;
+        }
+        return true;
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        Log.d(TAG, "onstop");
     }
 
     @Override
     protected void onDestroy() {
+        Log.d(TAG, "onDestroy");
         super.onDestroy();
+        stopTrackService();
     }
 }
