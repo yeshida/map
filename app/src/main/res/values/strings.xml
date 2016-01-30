@@ -29,4 +29,10 @@
     <string name="satellite">卫星</string>
     <string name="traffic">交通</string>
     <string name="streetview">街景</string>
+    <string name="version_text">版本信息</string>
+    <string name="helps_infos">帮助信息</string>
+    <string name="helps_text">帮助内容</string>
+    <string name="author">作者</string>
+    <string name="author_text">作者信息</string>
+    <string name="version">版本</string>
 </resources>

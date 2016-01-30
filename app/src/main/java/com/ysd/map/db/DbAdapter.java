@@ -20,25 +20,25 @@ public class DbAdapter {
         @Override
         public void onCreate(SQLiteDatabase db) {
             String tracks_sql = "CREATE TABLE "+TrackDbAdapter.TABLE_NAME+"("
-                    +TrackDbAdapter.ID+"INTEGER primary key autoincrement,"
-                    +TrackDbAdapter.NAME+"text not null,"
-                    +TrackDbAdapter.DESC+"text,"
-                    +TrackDbAdapter.DIST+"lONG,"
-                    +TrackDbAdapter.TRACKEDTIME+"LONG,"
-                    +TrackDbAdapter.LOCATE_COUNT+"INTEGER,"
-                    +TrackDbAdapter.AVGSPEED+"LONG,"
-                    +TrackDbAdapter.MAXSPEED+"LONG,"
-                    +TrackDbAdapter.UPDATED+"text"
+                    +TrackDbAdapter.ID+" INTEGER primary key autoincrement,"
+                    +TrackDbAdapter.NAME+" text not null,"
+                    +TrackDbAdapter.DESC+" text,"
+                    +TrackDbAdapter.DIST+" lONG,"
+                    +TrackDbAdapter.TRACKEDTIME+" LONG,"
+                    +TrackDbAdapter.LOCATE_COUNT+" INTEGER,"
+                    +TrackDbAdapter.AVGSPEED+" LONG,"
+                    +TrackDbAdapter.MAXSPEED+" LONG,"
+                    +TrackDbAdapter.UPDATED+" text"
                     +");";
             Log.i(TAG, tracks_sql);
             db.execSQL(tracks_sql);
             String locats_sql = "CREATE TABLE "+LocalDbAdapter.TABLE_NAME+"("
-                    +LocalDbAdapter.ID+"INTEGER primary key autoincrement,"
-                    +LocalDbAdapter.TRACKID+"INTEGER not null,"
-                    +LocalDbAdapter.LON+"DOUBLE,"
-                    +LocalDbAdapter.LAT+"DOUBLE,"
-                    +LocalDbAdapter.ALT+"DOUBLE,"
-                    +LocalDbAdapter.CREATED+"text"
+                    +LocalDbAdapter.ID+" INTEGER primary key autoincrement,"
+                    +LocalDbAdapter.TRACKID+" INTEGER not null,"
+                    +LocalDbAdapter.LON+" DOUBLE,"
+                    +LocalDbAdapter.LAT+" DOUBLE,"
+                    +LocalDbAdapter.ALT+" DOUBLE,"
+                    +LocalDbAdapter.CREATED+" text"
                     +");";
             Log.i(TAG, locats_sql);
             db.execSQL(locats_sql);

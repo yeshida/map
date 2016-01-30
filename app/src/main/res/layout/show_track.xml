@@ -7,7 +7,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_weight="1"
-    android:apiKey="AIzaSyBblBdB4a2rS7Jao3oFnGAb1DkFbSNRhhQ"/>
+    android:apiKey="AIzaSyCXUgk4My04QPZTQt-qW9iQjlqbnnU_ZfQ"
+    android:clickable="true"
+    android:enabled="true"/>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -18,7 +20,7 @@
             android:id="@+id/sat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40px"
+            android:layout_marginLeft="80px"
             android:text="@string/satellite"/>
              <Button
             android:id="@+id/traffic"
@@ -39,14 +41,14 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="#550000ff"
         android:padding="1px">
         <Button
             android:id="@+id/zin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30px"
+            android:layout_marginTop="150px"
             android:text="+"/>
         <Button
             android:id="@+id/zout"

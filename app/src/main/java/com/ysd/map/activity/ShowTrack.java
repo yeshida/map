@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -79,7 +80,7 @@ public class ShowTrack extends MapActivity {
         centerOnGPSPosition();
         revArgs();
         paintLocates();
-        startTrackService();
+       // startTrackService();
     }
 
     private void startTrackService() {
@@ -99,8 +100,8 @@ public class ShowTrack extends MapActivity {
             Cursor mLocatesCursor = mlcDbHelper.getTrackAllLocates(track_id);
             startManagingCursor(mLocatesCursor);
             Resources resources = getResources();
-           // Overlay overlays = new MyLocationOverlay(ShowTrack,mLocatesCursor);代码少了一段
-           // mMapView.getOverlays().add(overlays);
+            // Overlay overlays = new MyLocationOverlay(ShowTrack,mLocatesCursor);代码少了一段
+            // mMapView.getOverlays().add(overlays);
             mlcDbHelper.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -184,7 +185,7 @@ public class ShowTrack extends MapActivity {
             }
         });
         //set p the button for "GPS"
-        mGps = (Button) findViewById(R.id.sat);
+        mGps = (Button) findViewById(R.id.gps);
         mGps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -296,9 +297,17 @@ public class ShowTrack extends MapActivity {
 
     private void centerOnGPSPosition() {
         Log.d(TAG, "centerongpsposition");
-        String provider = "gps";
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
+        String context = Context.LOCATION_SERVICE;
+        LocationManager locationManager = (LocationManager) getSystemService(context);
+        // 设置位置服务信息
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setAltitudeRequired(false);
+        criteria.setBearingRequired(false);
+        criteria.setCostAllowed(false);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+        // 取得效果最好的位置服务
+        String provider = locationManager.getBestProvider(criteria, true);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -309,13 +318,17 @@ public class ShowTrack extends MapActivity {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        Location loc = lm.getLastKnownLocation(provider);
+        locationManager.requestLocationUpdates(provider, 1000, 0, locationListener);
+        Location loc=locationManager.getLastKnownLocation(provider);
+        while(loc==null){
+            locationManager.requestLocationUpdates(provider,1000,0,locationListener);
+        }
         mDefPoint = new GeoPoint((int) (loc.getLatitude() * 1000000), (int) (loc.getLongitude() * 1000000));
         mDefCaption ="Im Here.";
         mc.animateTo(mDefPoint);
         mc.setCenter(mDefPoint);
         //show Overlay on map
-        MyOverlay mo =new MyOverlay();
+        MyOverlay mo = new MyOverlay();
         mo.onTap(mDefPoint, mMapView);
         mMapView.getOverlays().add(mo);
     }

@@ -44,7 +44,7 @@ public class NewTrack extends Activity {
     protected void onStop() {
         super.onStop();
         Log.i(TAG, "onstop");
-        mDbHelper.close();
+        //mDbHelper.close();
     }
     private void findView() {
         Log.d(TAG, "find views");
@@ -70,7 +70,7 @@ public class NewTrack extends Activity {
                     Toast.makeText(NewTrack.this, getString(R.string.new_name_null), Toast.LENGTH_SHORT).show();
                 } else {
                     // TODO: 2016/1/25调用存储借口保存到数据库并启动service
-                    Long row_id = mDbHelper.createTrack(name, desc);
+                    Long row_id = mDbHelper.createTrack(name,desc);
                     Log.d(TAG, "row_id=" + row_id);
                     Intent intent = new Intent();
                     intent.setClass(NewTrack.this, ShowTrack.class);
